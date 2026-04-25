@@ -9,7 +9,7 @@
 ## Functionality Specification
 
 ### Phase 1 (MVP)
-- [ ] User registration and authentication (email/password)
+- [x] User registration and authentication (email/password)
 - [ ] User submits PII: name, email, phone, address
 - [ ] System queries approved data broker APIs for user data
 - [ ] Return results showing what data was found and where
