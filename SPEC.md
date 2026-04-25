@@ -23,7 +23,7 @@
 ## Tech Stack
 - **Backend**: Python/FastAPI
 - **Database**: PostgreSQL
-- **Frontend**: React (future)
+- **Frontend**: React + Vite
 
 ## Security Requirements
 - All PII encrypted at rest and in transit
@@ -52,3 +52,13 @@
 | `/pii/scan` | POST | Submit PII for searching | Yes |
 | `/pii/searches` | GET | List past searches | Yes |
 | `/pii/searches/{id}` | GET | Get specific search result | Yes |
+
+## Frontend Pages
+
+| Page | Route | Description |
+|------|-------|-------------|
+| Login | `/login` | User authentication |
+| Register | `/register` | Create new account |
+| Dashboard | `/dashboard` | Home page with search history |
+| Scan Form | `/scan` | Submit PII for searching |
+| Results | `/results/{id}` | View search results |
