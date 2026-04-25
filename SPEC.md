@@ -10,10 +10,10 @@
 
 ### Phase 1 (MVP)
 - [x] User registration and authentication (email/password)
-- [ ] User submits PII: name, email, phone, address
+- [x] User submits PII: name, email, phone, address
 - [ ] System queries approved data broker APIs for user data
-- [ ] Return results showing what data was found and where
-- [ ] User dashboard with search history
+- [x] Return results showing what data was found and where
+- [x] User dashboard with search history
 
 ### Phase 2 (Future)
 - [ ] Automated monitoring and alerts
@@ -36,3 +36,19 @@
 - Approved data broker APIs only
 - Public records searches where available
 - No direct scraping of websites
+
+## API Endpoints
+
+### Authentication (`/auth`)
+| Endpoint | Method | Description | Auth Required |
+|----------|--------|-------------|---------------|
+| `/auth/register` | POST | Create new account | No |
+| `/auth/login` | POST | Get JWT token | No |
+| `/auth/me` | GET | Get current user | Yes |
+
+### PII Scanning (`/pii`)
+| Endpoint | Method | Description | Auth Required |
+|----------|--------|-------------|---------------|
+| `/pii/scan` | POST | Submit PII for searching | Yes |
+| `/pii/searches` | GET | List past searches | Yes |
+| `/pii/searches/{id}` | GET | Get specific search result | Yes |

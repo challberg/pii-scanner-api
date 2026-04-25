@@ -6,6 +6,7 @@ from slowapi.errors import RateLimitExceeded
 
 from src.config import get_settings
 from src.auth import router as auth_router
+from src.pii_routes import router as pii_router
 
 settings = get_settings()
 
@@ -30,6 +31,7 @@ app.add_middleware(
 
 
 app.include_router(auth_router)
+app.include_router(pii_router)
 
 
 @app.get("/health")
