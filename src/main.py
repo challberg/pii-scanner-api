@@ -7,8 +7,12 @@ from slowapi.errors import RateLimitExceeded
 from src.config import get_settings
 from src.auth import router as auth_router
 from src.pii_routes import router as pii_router
+from src.database import engine, Base
+from src.models import User, SearchRequest, SearchSource
 
 settings = get_settings()
+
+Base.metadata.create_all(bind=engine)
 
 limiter = Limiter(key_func=get_remote_address)
 
