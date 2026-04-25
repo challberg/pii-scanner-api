@@ -26,10 +26,11 @@ export async function register(email: string, password: string): Promise<User> {
 }
 
 export async function login(email: string, password: string): Promise<AuthToken> {
-  const response = await axios.create({
-    baseURL: '/auth',
-    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-  }).post<AuthToken>('/login', new URLSearchParams({ username: email, password }))
+  const response = await api.post<AuthToken>(
+    '/login',
+    new URLSearchParams({ username: email, password }).toString(),
+    { headers: { 'Content-Type': 'application/x-www-form-urlencoded' } }
+  )
   setAuthToken(response.data.access_token)
   return response.data
 }
