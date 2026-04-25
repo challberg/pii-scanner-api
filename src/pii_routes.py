@@ -1,22 +1,17 @@
-from fastapi import APIRouter, Depends, HTTPException, status, Request, BackgroundTasks
+from fastapi import APIRouter, Depends, HTTPException, status, Request
 from sqlalchemy.orm import Session
 from slowapi import Limiter
 from slowapi.util import get_remote_address
 
 from src.database import get_db
 from src.deps import get_current_active_user
-from src.models import User, SearchRequest
-from src.pii_schemas import PIICreate, SearchResultResponse, SearchHistoryItem, SearchSource
-from src.config import get_settings
+from src.models import User, SearchRequest, SearchSource
+from src.pii_schemas import PIICreate, SearchResultResponse, SearchHistoryItem, SearchSource as SearchSourceSchema
+from src.services import get_broker
 
 limiter = Limiter(key_func=get_remote_address)
-settings = get_settings()
 
 router = APIRouter(prefix="/pii", tags=["pii"])
-
-
-def perform_data_broker_search(search_request: SearchRequest, db: Session) -> None:
-    pass
 
 
 @router.post("/scan", response_model=SearchResultResponse, status_code=status.HTTP_201_CREATED)
@@ -37,9 +32,35 @@ def submit_pii_scan(
         city=pii_data.city,
         state=pii_data.state,
         zip_code=pii_data.zip_code,
-        status="pending"
+        status="processing"
     )
     db.add(search_request)
+    db.commit()
+    db.refresh(search_request)
+
+    broker = get_broker()
+    broker_results = broker.search(
+        first_name=pii_data.first_name,
+        last_name=pii_data.last_name,
+        email=pii_data.email,
+        phone=pii_data.phone,
+        address=pii_data.address,
+        city=pii_data.city,
+        state=pii_data.state,
+        zip_code=pii_data.zip_code,
+    )
+
+    for result in broker_results:
+        source = SearchSource(
+            search_request_id=search_request.id,
+            source_name=result.source_name,
+            source_url=result.source_url,
+            data_found=result.data_found,
+            data_details=result.data_details,
+        )
+        db.add(source)
+
+    search_request.status = "completed"
     db.commit()
     db.refresh(search_request)
 
@@ -51,7 +72,15 @@ def submit_pii_scan(
         phone=search_request.phone,
         address=search_request.address,
         created_at=search_request.created_at.isoformat(),
-        sources=[]
+        sources=[
+            SearchSourceSchema(
+                source_name=s.source_name,
+                source_url=s.source_url,
+                data_found=s.data_found,
+                data_details=s.data_details
+            )
+            for s in search_request.sources
+        ]
     )
 
 
@@ -117,7 +146,7 @@ def get_search_result(
         address=search_request.address,
         created_at=search_request.created_at.isoformat(),
         sources=[
-            SearchSource(
+            SearchSourceSchema(
                 source_name=s.source_name,
                 source_url=s.source_url,
                 data_found=s.data_found,
