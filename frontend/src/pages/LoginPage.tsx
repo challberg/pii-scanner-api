@@ -15,9 +15,11 @@ export default function LoginPage() {
     setLoading(true)
 
     try {
-      await login(email, password)
+      const result = await login(email, password)
+      console.log('Login success, token:', result.access_token)
       navigate('/dashboard')
-    } catch {
+    } catch (err: unknown) {
+      console.error('Login failed:', err)
       setError('Invalid email or password')
     } finally {
       setLoading(false)

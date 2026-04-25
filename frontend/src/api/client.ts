@@ -26,11 +26,13 @@ export async function register(email: string, password: string): Promise<User> {
 }
 
 export async function login(email: string, password: string): Promise<AuthToken> {
+  console.log('Attempting login for:', email)
   const response = await api.post<AuthToken>(
     '/login',
     new URLSearchParams({ username: email, password }).toString(),
     { headers: { 'Content-Type': 'application/x-www-form-urlencoded' } }
   )
+  console.log('Login response:', response.data)
   setAuthToken(response.data.access_token)
   return response.data
 }
