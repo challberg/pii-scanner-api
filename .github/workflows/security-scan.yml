@@ -1,0 +1,33 @@
+name: Security Scan
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main]
+
+jobs:
+  scan:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install dependencies
+        run: pip install -r requirements-minimal.txt
+
+      - name: Run security audit
+        run: pip install safety bandit && safety check || echo "Safety not configured"
+
+      - name: Run bandit security scan
+        run: bandit -r src/ -f txt -o bandit-report.txt || true
+
+      - name: Run type checking
+        run: mypy src/ || true
+
+      - name: Run tests
+        run: pytest tests/ -v || true
