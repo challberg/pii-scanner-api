@@ -65,7 +65,8 @@ export default function DashboardPage() {
                       {search.first_name} {search.last_name}
                     </span>
                     <span className="search-date">
-                      {new Date(search.created_at).toLocaleDateString()}
+                      {new Date(search.created_at).toLocaleDateString()}{' '}
+                      {new Date(search.created_at).toLocaleTimeString()}
                     </span>
                   </Link>
                 </li>

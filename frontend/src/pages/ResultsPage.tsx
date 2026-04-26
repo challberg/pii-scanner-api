@@ -57,7 +57,8 @@ export default function ResultsPage() {
             Results for {result.first_name} {result.last_name}
           </h1>
           <p className="scan-date">
-            Scanned on {new Date(result.created_at).toLocaleDateString()}
+            Scanned on {new Date(result.created_at).toLocaleDateString()} at{' '}
+            {new Date(result.created_at).toLocaleTimeString()}
           </p>
         </div>
 
