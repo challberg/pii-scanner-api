@@ -21,28 +21,23 @@ export function getStoredToken(): string | null {
 }
 
 export async function register(email: string, password: string): Promise<User> {
-  const response = await api.post<User>('/register', { email, password })
+  const response = await api.post<User>('register', { email, password })
   return response.data
 }
 
 export async function login(email: string, password: string): Promise<AuthToken> {
-  const loginUrl = '/auth/login'
-  console.log('Login URL:', loginUrl)
-  console.log('API baseURL:', api.defaults.baseURL)
   const params = new URLSearchParams({ username: email, password }).toString()
-  console.log('Login params:', params)
   const response = await api.post<AuthToken>(
-    loginUrl,
+    'login',
     params,
     { headers: { 'Content-Type': 'application/x-www-form-urlencoded' } }
   )
-  console.log('Login response:', response.data)
   setAuthToken(response.data.access_token)
   return response.data
 }
 
 export async function getCurrentUser(): Promise<User> {
-  const response = await api.get<User>('/me')
+  const response = await api.get<User>('me')
   return response.data
 }
 
@@ -60,16 +55,16 @@ piiApi.interceptors.request.use((config) => {
 })
 
 export async function submitScan(data: PIIData): Promise<SearchResult> {
-  const response = await piiApi.post<SearchResult>('/scan', data)
+  const response = await piiApi.post<SearchResult>('scan', data)
   return response.data
 }
 
 export async function getSearches(): Promise<SearchHistoryItem[]> {
-  const response = await piiApi.get<SearchHistoryItem[]>('/searches')
+  const response = await piiApi.get<SearchHistoryItem[]>('searches')
   return response.data
 }
 
 export async function getSearchResult(id: number): Promise<SearchResult> {
-  const response = await piiApi.get<SearchResult>(`/searches/${id}`)
+  const response = await piiApi.get<SearchResult>(`searches/${id}`)
   return response.data
 }
