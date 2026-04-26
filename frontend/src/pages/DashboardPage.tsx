@@ -8,6 +8,7 @@ export default function DashboardPage() {
   const [user, setUser] = useState<User | null>(null)
   const [searches, setSearches] = useState<SearchHistoryItem[]>([])
   const [loading, setLoading] = useState(true)
+  const [refreshKey, setRefreshKey] = useState(0)
 
   useEffect(() => {
     async function loadData() {
@@ -24,11 +25,15 @@ export default function DashboardPage() {
       }
     }
     loadData()
-  }, [navigate])
+  }, [navigate, refreshKey])
 
   function handleLogout() {
     setAuthToken(null)
     navigate('/login')
+  }
+
+  function handleRefresh() {
+    setRefreshKey((k) => k + 1)
   }
 
   if (loading) {
@@ -41,6 +46,7 @@ export default function DashboardPage() {
         <h2>PII Scanner</h2>
         <div className="nav-user">
           <span>{user?.email}</span>
+          <button onClick={handleRefresh}>Refresh</button>
           <button onClick={handleLogout}>Logout</button>
         </div>
       </nav>
