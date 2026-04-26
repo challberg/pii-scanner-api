@@ -26,11 +26,14 @@
 - **Frontend**: React + Vite
 
 ## Security Requirements
-- All PII encrypted at rest and in transit
-- No secrets stored in code (use environment variables)
-- Rate limiting on all endpoints
-- Input validation and sanitization
-- Audit logging for all data access
+- [ ] All PII encrypted at rest (AES-256)
+- [ ] All PII encrypted in transit (TLS 1.3)
+- [ ] No secrets stored in code (use environment variables)
+- [ ] Rate limiting on all endpoints
+- [ ] Input validation and sanitization
+- [ ] Audit logging for all data access
+- [ ] Secure session management
+- [ ] Password strength enforcement
 
 ## Data Sources (Phase 1)
 - Approved data broker APIs only
@@ -77,6 +80,14 @@
 - [ ] Automated monitoring and alerts
 - [ ] Data removal requests
 - [ ] Email notifications
+
+### Phase 3 (Enhanced Reporting)
+- [ ] Data encryption at rest (user PII, search results)
+- [ ] Risk scoring per finding (Low/Medium/High)
+- [ ] Hazard explanations for each data source type
+- [ ] Remediation suggestions per finding
+- [ ] User awareness education content
+- [ ] Detailed reporting with context and recommendations
 
 ## Next Steps
 
@@ -129,3 +140,39 @@
 - [ ] Export results (PDF/CSV)
 - [ ] Bulk search capabilities
 - [ ] Multi-user team accounts
+
+### 8. Data Encryption at Rest
+- [ ] Implement field-level encryption for PII data
+- [ ] Use AES-256 for sensitive fields (name, email, phone, address)
+- [ ] Key management (AWS KMS, HashiCorp Vault)
+- [ ] Encrypt stored search results
+- [ ] Secure backup encryption
+
+### 9. Enhanced Reporting & Risk Assessment
+#### Risk Scoring
+- [ ] Low risk: Limited exposure, no financial/medical data
+- [ ] Medium risk: Multiple sources, contact info exposed
+- [ ] High risk: Financial data, SSN, medical records found
+- [ ] Automated risk score calculation per finding
+
+#### Hazard Explanations
+- [ ] Data broker profiles (what they sell, typical use cases)
+- [ ] Public records explanations (property, voter, court records)
+- [ ] Social media exposure risks
+- [ ] Identity theft risk factors
+- [ ] Links to external educational resources
+
+#### Remediation Suggestions
+- [ ] Opt-out instructions per data broker
+- [ ] Direct links to opt-out forms
+- [ ] Estimated difficulty/time for each removal
+- [ ] Alternative: Privacy request templates
+- [ ] When to contact attorney general
+
+#### User Awareness Education
+- [ ] "Why Your Data Matters" introductory content
+- [ ] Data broker ecosystem explanation
+- [ ] Privacy law references (CCPA, GDPR, state laws)
+- [ ] Identity protection best practices
+- [ ] Credit monitoring recommendations
+- [ ] Regular scan scheduling benefits
