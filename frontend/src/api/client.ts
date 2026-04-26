@@ -6,19 +6,36 @@ const api = axios.create({
   headers: { 'Content-Type': 'application/json' },
 })
 
+const piiApi = axios.create({
+  baseURL: '/pii',
+  headers: { 'Content-Type': 'application/json' },
+})
+
 export function setAuthToken(token: string | null) {
   if (token) {
-    api.defaults.headers.common['Authorization'] = `Bearer ${token}`
     localStorage.setItem('token', token)
+    api.defaults.headers.common['Authorization'] = `Bearer ${token}`
+    piiApi.defaults.headers.common['Authorization'] = `Bearer ${token}`
   } else {
-    delete api.defaults.headers.common['Authorization']
     localStorage.removeItem('token')
+    delete api.defaults.headers.common['Authorization']
+    delete piiApi.defaults.headers.common['Authorization']
   }
 }
 
 export function getStoredToken(): string | null {
   return localStorage.getItem('token')
 }
+
+export function initApiToken() {
+  const token = getStoredToken()
+  if (token) {
+    api.defaults.headers.common['Authorization'] = `Bearer ${token}`
+    piiApi.defaults.headers.common['Authorization'] = `Bearer ${token}`
+  }
+}
+
+initApiToken()
 
 export async function register(email: string, password: string): Promise<User> {
   const response = await api.post<User>('register', { email, password })
@@ -40,19 +57,6 @@ export async function getCurrentUser(): Promise<User> {
   const response = await api.get<User>('me')
   return response.data
 }
-
-const piiApi = axios.create({
-  baseURL: '/pii',
-  headers: { 'Content-Type': 'application/json' },
-})
-
-piiApi.interceptors.request.use((config) => {
-  const token = getStoredToken()
-  if (token) {
-    config.headers.common['Authorization'] = `Bearer ${token}`
-  }
-  return config
-})
 
 export async function submitScan(data: PIIData): Promise<SearchResult> {
   const response = await piiApi.post<SearchResult>('scan', data)
